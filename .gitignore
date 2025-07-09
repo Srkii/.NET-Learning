@@ -485,3 +485,5 @@ $RECYCLE.BIN/
 
 Migrations
 reactivities.db
+*db-shm
+*db-wal
