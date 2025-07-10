@@ -16,9 +16,15 @@ public class ActivitiesController(IMediator mediator) : BaseApiController
         return await mediator.Send(new GetActivityList.Query());
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("getById/{id}")]
     public async Task<ActionResult<Activity>> GetActivityById(string id)
     {
-        return await mediator.Send(new GetActivityById.Query{ Id = id });
+        return await mediator.Send(new GetActivityById.Query { Id = id });
+    }
+
+    [HttpGet("getByCategory/{category}")]
+    public async Task<ActionResult<List<Activity>>> GetActivitiesByCategory(string category)
+    {
+        return await mediator.Send(new GetActivitiesByCategory.Query { Category = category });
     }
 }
