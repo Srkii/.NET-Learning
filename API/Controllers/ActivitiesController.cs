@@ -1,3 +1,4 @@
+using Application.Activities.Commands;
 using Application.Activities.Queries;
 using Domain;
 using MediatR;
@@ -23,5 +24,11 @@ public class ActivitiesController : BaseApiController
     public async Task<ActionResult<List<Activity>>> GetActivitiesByCategory(string category)
     {
         return await Mediator.Send(new GetActivitiesByCategory.Query { Category = category });
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<string>> CreateActivity(Activity activity)
+    {
+        return await Mediator.Send(new CreateActivity.Command { Activity = activity });
     }
 }
