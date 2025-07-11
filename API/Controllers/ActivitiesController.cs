@@ -1,30 +1,27 @@
-using System;
 using Application.Activities.Queries;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers;
 
-public class ActivitiesController(IMediator mediator) : BaseApiController
+public class ActivitiesController : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities()
     {
-        return await mediator.Send(new GetActivityList.Query());
+        return await Mediator.Send(new GetActivityList.Query());
     }
 
     [HttpGet("getById/{id}")]
     public async Task<ActionResult<Activity>> GetActivityById(string id)
     {
-        return await mediator.Send(new GetActivityById.Query { Id = id });
+        return await Mediator.Send(new GetActivityById.Query { Id = id });
     }
 
     [HttpGet("getByCategory/{category}")]
     public async Task<ActionResult<List<Activity>>> GetActivitiesByCategory(string category)
     {
-        return await mediator.Send(new GetActivitiesByCategory.Query { Category = category });
+        return await Mediator.Send(new GetActivitiesByCategory.Query { Category = category });
     }
 }
