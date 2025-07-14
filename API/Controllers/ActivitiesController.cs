@@ -18,6 +18,8 @@ public class ActivitiesController : BaseApiController
     [HttpGet("getById/{id}")]
     public async Task<ActionResult<Activity>> GetActivityById(string id)
     {
+        throw new Exception("This is a test exception");
+
         return HandleResult(await Mediator.Send(new GetActivityById.Query { Id = id }));
     }
 
