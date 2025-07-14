@@ -17,7 +17,7 @@ public class ActivitiesController : BaseApiController
     [HttpGet("getById/{id}")]
     public async Task<ActionResult<Activity>> GetActivityById(string id)
     {
-        return await Mediator.Send(new GetActivityById.Query { Id = id });
+        return HandleResult(await Mediator.Send(new GetActivityById.Query { Id = id }));
     }
 
     [HttpGet("getByCategory/{category}")]
