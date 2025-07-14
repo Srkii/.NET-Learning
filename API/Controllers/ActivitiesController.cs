@@ -18,8 +18,6 @@ public class ActivitiesController : BaseApiController
     [HttpGet("getById/{id}")]
     public async Task<ActionResult<Activity>> GetActivityById(string id)
     {
-        throw new Exception("This is a test exception");
-
         return HandleResult(await Mediator.Send(new GetActivityById.Query { Id = id }));
     }
 
@@ -36,9 +34,9 @@ public class ActivitiesController : BaseApiController
     }
 
     [HttpPut]
-    public async Task<ActionResult<Unit>> EditActivity(Activity activity)
+    public async Task<ActionResult<Unit>> EditActivity(EditActivityDto activityDto)
     {
-        return HandleResult(await Mediator.Send(new EditActivity.Command { Activity = activity }));
+        return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activityDto }));
     }
 
     [HttpDelete("{id}")]
