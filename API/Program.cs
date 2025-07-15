@@ -4,19 +4,56 @@ using Application.Activities.Validators;
 using Application.Core;
 using Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    opt.Filters.Add(new AuthorizeFilter(policy));
+});
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter 'Bearer' followed by your token. Example: Bearer 12345abcdef"
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+
+});
 builder.Services.AddMediatR(x =>
 {
     x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
@@ -30,7 +67,8 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
     opt.User.RequireUniqueEmail = true;
 })
 .AddRoles<IdentityRole>()
-.AddEntityFrameworkStores<AppDbContext>();
+.AddEntityFrameworkStores<AppDbContext>()
+.AddApiEndpoints();
 
 var app = builder.Build();
 
