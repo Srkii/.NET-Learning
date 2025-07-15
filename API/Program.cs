@@ -73,6 +73,8 @@ builder.Services.AddIdentityApiEndpoints<User>(opt =>
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+    
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
