@@ -35,12 +35,14 @@ public class ActivitiesController : BaseApiController
     }
 
     [HttpPut]
+    [Authorize(Policy = "IsActivityHost")]
     public async Task<ActionResult<Unit>> EditActivity(EditActivityDto activityDto)
     {
         return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activityDto }));
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = "IsActivityHost")]
     public async Task<ActionResult<Unit>> DeleteActivity(string id)
     {
         return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
